@@ -4,9 +4,9 @@
 **Implementation of project in steps:**
 1) Download all files to the system
 2) Download python from https://www.python.org/downloads/
-3) Download jupyter from https://jupyter.org/install
+3) Download jupyter from https://jupyter.org/install and open
 4) download VS code from https://code.visualstudio.com/
-5) Open app.py and notebook.ipynb in VS code
+5) Open app.py and notebook.ipynb in VS code seperatly (don't open from jupyter)
 6) In VS code on the top navigation bar click terminal < New terminal
 7) In terminal run these commands "pip install tqdm matplotlib opencv-python keras tensorflow imutils" and "pip install flask flask_sqlalchemy" to install libraries
 8) in terminal give command "python app.py" to run app.py file
