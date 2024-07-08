@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <style>
+        body {
+            margin: 20px;
+        }
+        .user-info-button {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .upload-button {
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .get-results-button, .compare-scans-button {
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .preview-image {
+            max-width: 100%;
+            height: auto;
+            margin: 10px;
+        }
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            z-index: 1;
+        }
+        .modal-content {
+            text-align: center;
+            max-height: 80vh; 
+            overflow-y: auto; 
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #aaa;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .image-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+        }
+        .delete-button {
+            position: absolute;
+            bottom: 5px;  
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        #resultsPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Brain Tumor Classifier</h1>
+
+    <button class="user-info-button" onclick="showUserInfo()">User</button>
+
+    <input type="file" id="uploadInput" style="display: none;" accept=".png, .jpeg, .jpg" onchange="handleFileUpload(this)">
+    <button class="upload-button" onclick="openFileUploader()">Upload MRI Scans</button>
+
+    <button id="getResultsButton" class="get-results-button" style="display: none;" onclick="getResults()">Get Results</button>
+
+    <button class="upload-button" onclick="viewPreviousMRIScans()">Previous Uploaded MRI Scans</button>
+
+    <div id="userInfoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeUserInfoModal()">&times;</span>
+            <h2>User Information</h2>
+            
+            <p>Username: <span id="loggedInUsername"></span></p>
+            <p>Email: <span id="loggedInEmail"></span></p>
+            
+            <button onclick="logout()">Logout</button>
+            <button onclick="deleteAccount()">Delete Account</button>
+        </div>
+    </div>
+
+    <div id="imageContainer"></div>
+
+    <div id="imagePopup" class="modal">
+        <span class="close" onclick="closeImagePopup()">&times;</span>
+        <div class="modal-content" id="popupContent"></div>
+    </div>
+    
+<div id="resultsPopup" class="modal">
+    <span class="close" onclick="closeResultsPopup()">&times;</span>
+    <div class="modal-content" id="resultsContent"></div>
+</div>
+
+    <script>
+        var user_info = {{ user_info|tojson|safe }};
+        
+        function showUserInfo() {
+            if (user_info) {
+                document.getElementById("loggedInUsername").innerHTML = user_info.username;
+                document.getElementById("loggedInEmail").innerHTML = user_info.email;
+
+                document.getElementById("userInfoModal").style.display = "block";
+            } else {
+                alert('User not logged in');
+            }
+        }
+
+        function closeUserInfoModal() {
+            document.getElementById("userInfoModal").style.display = "none";
+        }
+
+        function openFileUploader() {
+            document.getElementById('uploadInput').click();
+        }
+
+        function handleFileUpload(input) {
+            var file = input.files[0];
+
+            if (file) {
+                var formData = new FormData();
+                formData.append('file', file);
+
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+
+                    document.getElementById("getResultsButton").style.display = "block";
+                    document.getElementById("compareScansButton").style.display = "block";
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+        function viewPreviousMRIScans() {
+            fetch('/previous_scans')
+                .then(response => response.json())
+                .then(data => {
+                    var popupContent = '';
+
+                    if ('image_data' in data && data.image_data.length > 0) {
+                        popupContent = data.image_data.map(imageInfo => {
+                            return `
+                                <div class="image-container">
+                                    <img src="/uploads/${user_info.username}/${imageInfo.filename}" class="preview-image" />
+                                    <button class="delete-button" onclick="deleteImage('${user_info.username}', '${imageInfo.filename}')">Delete Image</button>
+                                </div>
+                            `;
+                        }).join("");
+                    } else {
+                        popupContent = '<p>No images found or not uploaded</p>';
+                    }
+
+                    openImagePopup(popupContent);
+                })
+                .catch(error => {
+                    console.error('Error fetching previous scans:', error);
+                    openImagePopup('<p>Error fetching previous scans</p>');
+                });
+        }
+
+        function openImagePopup(content) {
+            document.getElementById("popupContent").innerHTML = content;
+
+            document.getElementById("imagePopup").style.display = "block";
+        }
+
+        function closeImagePopup() {
+            document.getElementById("imagePopup").style.display = "none";
+        }
+
+        function deleteImage(username, filename) {
+            fetch(`/delete_image/${username}/${filename}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                viewPreviousMRIScans();
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error deleting image:', error);
+            });
+        }
+
+        function getResults() {
+            openResultsPopup('<p>Loading...</p>');
+
+            setTimeout(function() {
+                var imageContent = '<img src="/temporary/overlayed_image.jpg" alt="Overlayed Image">';
+
+                openResultsPopup(imageContent);
+            }, 3000); 
+        }
+
+        function openResultsPopup(content) {
+            document.getElementById("resultsContent").innerHTML = content;
+
+            document.getElementById("resultsPopup").style.display = "block";
+        }
+
+        function closeResultsPopup() {
+            // Close the popup
+            document.getElementById("resultsPopup").style.display = "none";
+            location.reload();
+        }
+
+        function logout() {
+            window.location.href = "/logout";
+        }
+
+        function deleteAccount() {
+            window.location.href = "/delete_account";
+        }
+    </script>
+</body>
+</html>
