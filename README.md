@@ -12,11 +12,12 @@
   i) pip install tqdm
   ii) pip install matplotlib
   iii) pip install opencv-python
-  iv) pip install keras
+  iv) pip install keras_preprocessing
   v) pip install tensorflow
   vi) pip install imutils
   vii) pip install flask
-  viii) flask_sqlalchemy
+  viii) pip install flask_sqlalchemy
+  ix) pip install scipy
 9) close the VS code and open after all the packages installed
 10) in terminal give command "python app.py" to run app.py file
 11) and run notebook.ipynb
