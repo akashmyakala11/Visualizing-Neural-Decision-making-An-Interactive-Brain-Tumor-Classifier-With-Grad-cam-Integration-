@@ -9,14 +9,14 @@
 5) Open app.py and notebook.ipynb in VS code seperatly (don't open from jupyter)
 6) In VS code on the top navigation bar click terminal < New terminal
 7) In terminal run these commands to install libraries:
-pip install tqdm
-pip install matplotlib
-pip install opencv-python
-pip install keras
-pip install tensorflow
-pip install imutils
-pip install flask
-flask_sqlalchemy
+  i) pip install tqdm
+  ii) pip install matplotlib
+  iii) pip install opencv-python
+  iv) pip install keras
+  v) pip install tensorflow
+  vi) pip install imutils
+  vii) pip install flask
+  viii) flask_sqlalchemy
 9) in terminal give command "python app.py" to run app.py file
 10) and run notebook.ipynb
 
