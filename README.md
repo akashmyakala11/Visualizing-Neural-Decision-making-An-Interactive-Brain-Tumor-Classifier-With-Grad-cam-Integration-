@@ -18,13 +18,14 @@
   vii) pip install flask
   viii) pip install flask_sqlalchemy
   ix) pip install scipy
-9) close the VS code and open after all the packages installed
-10) in terminal give command "python app.py" to run app.py file
-11) and run notebook.ipynb
+8) close the VS code and open after all the packages installed
+9) in terminal give command "python app.py" to run app.py file
+10) and run notebook.ipynb (this may take up to an hour so be pecient)
 
 **Executing the project:**
 1) After successful execution of app.py and notebook.ipynb open "http://localhost:5000" in the browser
 2) interface will be displayed then login or register into the page
-3) After login or registering into the page the will be main page displayed which is having user info, upload mri scan and previous mri scans buttons
-4) perform actions according to the requriement
+3) After login or registering into the page there will be main page displayed which is having user info, upload mri scan and previous mri scans buttons
+4) upload mri scan images from the folder named "Test" and click on get results button to ge results
+5) perform actions according to the requriement
 
