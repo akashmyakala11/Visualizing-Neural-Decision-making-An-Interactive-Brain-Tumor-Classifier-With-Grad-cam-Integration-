@@ -3,7 +3,7 @@
 
 **Implementation of project in steps:**
 1) Download all files to the system
-2) Download python from https://www.python.org/downloads/
+2) Download python 3.11.0 from [https://www.python.org/downloads/](https://www.python.org/downloads/release/python-3110/)
 3) Download jupyter from https://jupyter.org/install and open
 4) download VS code from https://code.visualstudio.com/
 5) Open app.py and notebook.ipynb in VS code seperatly (don't open from jupyter)
@@ -17,8 +17,9 @@
   vi) pip install imutils
   vii) pip install flask
   viii) flask_sqlalchemy
-9) in terminal give command "python app.py" to run app.py file
-10) and run notebook.ipynb
+9) close the VS code and open after all the packages installed
+10) in terminal give command "python app.py" to run app.py file
+11) and run notebook.ipynb
 
 **Executing the project:**
 1) After successful execution of app.py and notebook.ipynb open "http://localhost:5000" in the browser
