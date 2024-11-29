@@ -8,9 +8,17 @@
 4) download VS code from https://code.visualstudio.com/
 5) Open app.py and notebook.ipynb in VS code seperatly (don't open from jupyter)
 6) In VS code on the top navigation bar click terminal < New terminal
-7) In terminal run these commands "pip install tqdm matplotlib opencv-python keras tensorflow imutils" and "pip install flask flask_sqlalchemy" to install libraries
-8) in terminal give command "python app.py" to run app.py file
-9) and run notebook.ipynb
+7) In terminal run these commands to install libraries:
+pip install tqdm
+pip install matplotlib
+pip install opencv-python
+pip install keras
+pip install tensorflow
+pip install imutils
+pip install flask
+flask_sqlalchemy
+9) in terminal give command "python app.py" to run app.py file
+10) and run notebook.ipynb
 
 **Executing the project:**
 1) After successful execution of app.py and notebook.ipynb open "http://localhost:5000" in the browser
